@@ -12,7 +12,6 @@ import AppBarContent from '../AppBarContent'
 const fullDrawerWidth = 240
 
 export default function DashboardMobileLayout ({ open, setOpen, children }) {
-  // const theme = useTheme()
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>

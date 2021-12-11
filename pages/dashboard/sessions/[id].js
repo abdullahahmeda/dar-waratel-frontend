@@ -10,7 +10,7 @@ import Divider from '@mui/material/Divider'
 import Link from 'next/link'
 import Button from '@mui/material/Button'
 
-function ShowSession () {
+function Session () {
   const [loading, setLoading] = useState(true)
   const [session, setSession] = useState(null)
 
@@ -48,7 +48,7 @@ function ShowSession () {
                 {session.students.map(student => (
                   <Box display='flex' alignContent='center' justifyContent='space-between' my={2}>
                     <Typography>{student.name}</Typography>
-                    <Link href='/dashboard/grades/'><Button component='a' variant='contained'>إضافة تقييم</Button></Link>
+                    <Link href={`/dashboard/grades/${session.id}/${student.id}`}><Button component='a' variant='contained'>إضافة تقييم</Button></Link>
                   </Box>
                 ))}
               </Box>
@@ -60,4 +60,4 @@ function ShowSession () {
   )
 }
 
-export default ShowSession
+export default Session

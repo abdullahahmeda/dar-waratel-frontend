@@ -9,6 +9,7 @@ import { SnackbarProvider } from 'notistack'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { DialogProvider } from '../libs/my-dialog'
+import Head from 'next/head'
 
 export default function App ({ Component, pageProps }) {
   return (
@@ -19,6 +20,9 @@ export default function App ({ Component, pageProps }) {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <SnackbarProvider>
                   <DialogProvider>
+                    <Head>
+                      <title>دار ورتل</title>
+                    </Head>
                     <Component {...pageProps} />
                   </DialogProvider>
                 </SnackbarProvider>

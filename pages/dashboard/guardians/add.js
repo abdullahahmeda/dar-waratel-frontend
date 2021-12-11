@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useForm } from 'react-hook-form'
@@ -10,7 +10,7 @@ import DashboardLayout from '../../../components/layouts/DashboardLayout'
 import Head from 'next/head'
 import API from '../../../API'
 import FormHelperText from '@mui/material/FormHelperText'
-import apiErrors from '../../../locales/errors/ar.json'
+import httpErrors from '../../../httpErrors.json'
 import { useSnackbar } from 'notistack'
 import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
@@ -46,9 +46,9 @@ export default function AddGuardian () {
         router.push('/dashboard/guardians')
       })
       .catch(({ response }) => {
-        if (response.status === 403) return setError(apiErrors[10])
-        else if (response) return setError(apiErrors[response?.data?.error?.code || 1])
-        setError(apiErrors[1])
+        if (response.status === 403) return setError(httpErrors[10])
+        else if (response) return setError(httpErrors[response?.data?.error?.code || 1])
+        setError(httpErrors[1])
       })
       .finally(() => setLoading(false))
   }
@@ -60,8 +60,8 @@ export default function AddGuardian () {
           <title>لوحة التحكم | إضافة ولي أمر</title>
         </Head>
         <Container>
-          <Box component='form' onSubmit={handleSubmit(onSubmit)}>
-            <Typography variant='h3' sx={{ mb: 3 }}>إضافة ولي أمر</Typography>
+          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة ولي أمر</Typography>
             <TextField
               name='name'
               control={control}
@@ -120,7 +120,7 @@ export default function AddGuardian () {
             />
             {error && <FormHelperText error={Boolean(error)} sx={{ mb: 1 }}>{error}</FormHelperText>}
             <LoadingButton type='submit' variant='contained' loading={loading}>إضافة</LoadingButton>
-          </Box>
+          </Paper>
         </Container>
       </div>
     </DashboardLayout>

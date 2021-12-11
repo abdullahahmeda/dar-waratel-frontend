@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import Link from 'next/link'
+import { useDialog } from '../../../libs/my-dialog'
+import { useSnackbar } from 'notistack'
 
 const columns = [
   {
@@ -21,7 +23,9 @@ function StudentsIndex () {
   const [data, setData] = useState([])
   const [page, setPage] = useState(0)
   const [count, setCount] = useState(1)
+  const { openModal, closeModal } = useDialog()
   const [loading, setLoading] = useState(true)
+  const { enqueueSnackbar } = useSnackbar()
   useEffect(() => {
     API.get(`/api/students?page=0`)
       .then(({ data }) => {
@@ -31,7 +35,32 @@ function StudentsIndex () {
       })
   }, [])
 
-  const confirmDeleteRow = () => {}
+  const confirmDeleteRow = (row, key) => {
+    openModal({
+      title: 'حذف طالب',
+      text: <div>هل أنت متأكد من رغبتك في حذف الطالب <Typography sx={{ fontWeight: 'bold' }}>{row.name}؟</Typography></div>,
+      actions: (
+        <>
+          <Button onClick={closeModal}>تراجع</Button>
+          <Button onClick={() => deleteRow(row, key)}>حذف</Button>
+        </>
+      )
+    })
+  }
+
+  const deleteRow = (row, key) => {
+    closeModal()
+    API.delete(`/api/students/${row.id}`)
+      .then(() => {
+        const dataCopy = [...data]
+        dataCopy.splice(key, 1)
+        setData(dataCopy)
+        enqueueSnackbar('تم حذف الطالب بنجاح', { variant: 'success' })
+      })
+      .catch(() => {
+        enqueueSnackbar('حدث خطأ أثناء حذف الطالب', { variant: 'error' })
+      })
+  }
 
   return (
     <DashboardLayout>

@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
 import { useForm } from 'react-hook-form'
 import Head from 'next/head'
 import DashboardLayout from '../../../components/layouts/DashboardLayout'
@@ -73,8 +73,8 @@ function AddClass () {
           <title>دار ورتل | إضافة فصل</title>
         </Head>
         <Container>
-          <Typography variant='h3' sx={{ mb: 3 }}>إضافة فصل</Typography>
-          <Box component='form' onSubmit={handleSubmit(onSubmit)}>
+          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة فصل</Typography>
             <TextField
               name='name'
               control={control}
@@ -117,7 +117,7 @@ function AddClass () {
               )}
             />
             <LoadingButton type='submit' variant='contained'>إضافة</LoadingButton>
-          </Box>
+          </Paper>
         </Container>
       </div>
     </DashboardLayout>

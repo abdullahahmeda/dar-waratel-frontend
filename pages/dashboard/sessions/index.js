@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import Link from 'next/link'
+import { format } from 'date-fns'
+import { useDialog } from '../../../libs/my-dialog'
+import { useSnackbar } from 'notistack'
 
 const columns = [
   {
@@ -20,8 +23,7 @@ const columns = [
     accessor: 'session_date',
     label: 'موعد الجلسة',
     Cell: ({ value }) => {
-      const date = new Date(value)
-      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`
+      return format(new Date(value), 'dd-MM-yyyy')
     }
   }
 ]
@@ -31,6 +33,8 @@ function SessionsIndex () {
   const [page, setPage] = useState(0)
   const [count, setCount] = useState(1)
   const [loading, setLoading] = useState(true)
+  const { openModal, closeModal } = useDialog()
+  const { enqueueSnackbar } = useSnackbar()
   useEffect(() => {
     API.get(`/api/sessions?page=0`)
       .then(({ data }) => {
@@ -40,8 +44,31 @@ function SessionsIndex () {
       })
   }, [])
 
-  const confirmDeleteRow = () => {
-    
+  const deleteRow = (row, key) => {
+    closeModal()
+    API.delete(`/api/sessions/${row.id}`)
+      .then(() => {
+        const dataCopy = [...data]
+        dataCopy.splice(key, 1)
+        setData(dataCopy)
+        enqueueSnackbar('تم حذف الجلسة بنجاح', { variant: 'success' })
+      })
+      .catch(() => {
+        enqueueSnackbar('حدث خطأ أثناء حذف الجلسة', { variant: 'error' })
+      })
+  }
+
+  const confirmDeleteRow = (row, key) => {
+    openModal({
+      title: 'حذف فصل',
+      text: <div>هل أنت متأكد من رغبتك في حذف الجلسة <Typography sx={{ fontWeight: 'bold' }}>{row.class.name}(بتاريخ {format(new Date(row.session_date), 'dd-MM-yyyy')})؟</Typography></div>,
+      actions: (
+        <>
+          <Button onClick={closeModal}>تراجع</Button>
+          <Button onClick={() => deleteRow(row, key)}>حذف</Button>
+        </>
+      )
+    })
   }
 
   return (

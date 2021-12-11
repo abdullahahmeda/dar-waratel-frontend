@@ -31,10 +31,10 @@ function GuardiansIndex () {
   const [count, setCount] = useState(1)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    API.get(`/api/guardians?page=0`)
+    API.get(`/api/guardians`)
       .then(({ data }) => {
-        setData(data.guardians.results)
-        setCount(data.guardians.total)
+        setData(data.guardians)
+        setCount(data.guardians.length)
         setLoading(false)
       })
   }, [])

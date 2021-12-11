@@ -16,7 +16,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { useState } from 'react'
 import API from '../API'
 import Typography from '@mui/material/Typography'
-import apiErrors from '../locales/errors/ar.json'
+import httpErrors from '../httpErrors.json'
 import withGuest from '../hoc/withGuest'
 import MasterLayout from '../components/layouts/MasterLayout'
 import { useRouter } from 'next/router'
@@ -53,9 +53,9 @@ function Login () {
         router.push('/')
       })
       .catch(({ response }) => {
-        if (response.status === 403) return setError(apiErrors[10])
-        else if (response) return setError(apiErrors[response?.data?.error?.code || 1])
-        setError(apiErrors[1])
+        if (response.status === 403) return setError(httpErrors[10])
+        else if (response) return setError(httpErrors[response?.data?.error?.code || 1])
+        setError(httpErrors[1])
       })
       .finally(() => setLoading(false))
   }

@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
 import { useForm } from 'react-hook-form'
 import Head from 'next/head'
 import DashboardLayout from '../../../components/layouts/DashboardLayout'
@@ -77,8 +77,8 @@ function AddStudent () {
           <title>لوحة التحكم | إضافة طالب</title>
         </Head>
         <Container>
-          <Box component='form' onSubmit={handleSubmit(onSubmit)}>
-            <Typography variant='h3' sx={{ mb: 3 }}>إضافة طالب</Typography>
+          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة طالب</Typography>
             <TextField
               name='name'
               control={control}
@@ -120,7 +120,7 @@ function AddStudent () {
               )}
             />
             <LoadingButton type='submit' variant='contained'>إضافة</LoadingButton>
-          </Box>
+          </Paper>
         </Container>
       </div>
     </DashboardLayout>

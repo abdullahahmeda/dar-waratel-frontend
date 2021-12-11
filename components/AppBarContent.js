@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import API from '../API'
 import { useSnackbar } from 'notistack'
-import apiErrors from '../locales/errors/ar.json'
+import httpErrors from '../httpErrors.json'
 import { setAuthedUser } from '../actions/authedUser'
 import { useDispatch } from 'react-redux'
 
@@ -19,8 +19,8 @@ export default function AppBarContent ({ open, setOpen }) {
         dispatch(setAuthedUser(null))
       })
       .catch(({ response }) => {
-        if (response) enqueueSnackbar(apiErrors[response?.data?.error?.code || 1], { variant: 'error' })
-        enqueueSnackbar(apiErrors[1], { variant: 'error' })
+        if (response) enqueueSnackbar(httpErrors[response?.data?.error?.code || 1], { variant: 'error' })
+        enqueueSnackbar(httpErrors[1], { variant: 'error' })
       })
   }
 

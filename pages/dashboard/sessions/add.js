@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
 import { useForm } from 'react-hook-form'
 import Head from 'next/head'
 import DashboardLayout from '../../../components/layouts/DashboardLayout'
@@ -89,7 +90,6 @@ function AddSession () {
   }, [studentsLoading])
 
   const onSubmit = (data) => {
-    console.log(data)
     API.post('/api/sessions', {
       session_date: formatISO(data.session_date, { representation: 'date' }),
       class_id: data.class.id,
@@ -110,8 +110,8 @@ function AddSession () {
           <title>دار ورتل | إضافة جلسة</title>
         </Head>
         <Container>
-          <Typography variant='h3' sx={{ mb: 3 }}>إضافة جلسة</Typography>
-          <Box component='form' onSubmit={handleSubmit(onSubmit)}>
+          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة جلسة</Typography>
             <DatePicker
               name='session_date'
               control={control}
@@ -190,7 +190,7 @@ function AddSession () {
               )}
             />
             <LoadingButton type='submit' variant='contained'>إضافة</LoadingButton>
-          </Box>
+          </Paper>
         </Container>
       </div>
     </DashboardLayout>

@@ -3,15 +3,22 @@ import Divider from '@mui/material/Divider'
 import MuiListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import FaceIcon from '@mui/icons-material/Face'
 import { styled } from '@mui/material/styles'
+import CollapsableListItem from './CollapsableListItem'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
+import ListItemButton from '@mui/material/ListItemButton'
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
+import ListAltIcon from '@mui/icons-material/ListAlt'
+import SchoolIcon from '@mui/icons-material/School'
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
+import Link from 'next/link'
 
 const ListItem = styled(MuiListItem)(
   ({ theme }) => ({
-    paddingInline: theme.spacing(3)
+    paddingLeft: theme.spacing(3)
   })
 )
 
@@ -37,25 +44,86 @@ export default function DrawerContent () {
       </DrawerHeader>
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <CollapsableListItem primary='أولياء الأمور' icon={SupervisorAccountIcon}>
+          <List component="div" disablePadding>
+            <Link href='/dashboard/guardians/add'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <AddCircleOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="إضافة" />
+              </ListItemButton>
+            </Link>
+            <Link href='/dashboard/guardians'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <ListAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="عرض الكل" />
+              </ListItemButton>
+            </Link>
+          </List>
+        </CollapsableListItem>
+        <CollapsableListItem primary='الطلاب' icon={FaceIcon}>
+          <List component="div" disablePadding>
+            <Link href='/dashboard/students/add'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <AddCircleOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="إضافة" />
+              </ListItemButton>
+            </Link>
+            <Link href='/dashboard/students'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <ListAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="عرض الكل" />
+              </ListItemButton>
+            </Link>
+          </List>
+        </CollapsableListItem>
+        <CollapsableListItem primary='الفصول' icon={SchoolIcon}>
+          <List component="div" disablePadding>
+            <Link href='/dashboard/classes/add'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <AddCircleOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="إضافة" />
+              </ListItemButton>
+            </Link>
+            <Link href='/dashboard/classes'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <ListAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="عرض الكل" />
+              </ListItemButton>
+            </Link>
+          </List>
+        </CollapsableListItem>
+        <CollapsableListItem primary='الجلسات' icon={AssignmentTurnedInIcon}>
+          <List component="div" disablePadding>
+            <Link href='/dashboard/sessions/add'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <AddCircleOutlineIcon />
+                </ListItemIcon>
+                <ListItemText primary="إضافة" />
+              </ListItemButton>
+            </Link>
+            <Link href='/dashboard/sessions'>
+              <ListItemButton component='a' sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <ListAltIcon />
+                </ListItemIcon>
+                <ListItemText primary="عرض الكل" />
+              </ListItemButton>
+            </Link>
+          </List>
+        </CollapsableListItem>
       </List>
     </>
   )
