@@ -49,6 +49,7 @@ const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' 
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
+    boxShadow: theme.shadows[0],
     width: `calc(100% - ${initialDrawerWidth}px)`,
     marginLeft: `${initialDrawerWidth}px`,
     ...(open && {
@@ -68,9 +69,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
+    color: '#fff',
+    '& .MuiPaper-root': { backgroundColor: theme.palette.primary.dark },
     '&:hover': {
       ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme)
+      '& .MuiDrawer-paper': {
+        ...openedMixin(theme),
+        ...(!open && { boxShadow: theme.shadows[4] })
+      }
     },
     ...(open && {
       ...openedMixin(theme),

@@ -6,13 +6,13 @@ import Collapse from '@mui/material/Collapse'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 
-export default function CollapsableListItem ({ primary, icon, children }) {
+export default function CollapsableListItem ({ primary, icon, children, iconSx, buttonSx }) {
   const Icon = icon
   const [open, setOpen] = useState(false)
   return (
     <>
-      <ListItemButton onClick={() => setOpen(!open)} sx={{ paddingLeft: 3 }}>
-        {icon && <ListItemIcon>
+      <ListItemButton onClick={() => setOpen(!open)} sx={{ paddingLeft: 3, ...(buttonSx && buttonSx) }}>
+        {icon && <ListItemIcon sx={iconSx}>
           {<Icon />}
         </ListItemIcon>}
         <ListItemText primary={primary} />

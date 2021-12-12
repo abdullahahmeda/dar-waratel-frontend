@@ -23,6 +23,7 @@ import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { setAuthedUser } from '../actions/authedUser'
+import { useTheme } from '@mui/material/styles'
 
 const defaultValues = {
   username: '',
@@ -41,6 +42,7 @@ function Login () {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { enqueueSnackbar } = useSnackbar()
+  const theme = useTheme()
 
   const onSubmit = (data) => {
     setLoading(true)
@@ -66,7 +68,7 @@ function Login () {
         <Global
           styles={{
             body: {
-              backgroundColor: '#eee'
+              backgroundColor: theme.palette.background.default
             }
           }}
         />

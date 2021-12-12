@@ -1,7 +1,7 @@
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 import MuiListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
+import MuiListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
@@ -9,7 +9,7 @@ import FaceIcon from '@mui/icons-material/Face'
 import { styled } from '@mui/material/styles'
 import CollapsableListItem from './CollapsableListItem'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import ListItemButton from '@mui/material/ListItemButton'
+import MuiListItemButton from '@mui/material/ListItemButton'
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount'
 import ListAltIcon from '@mui/icons-material/ListAlt'
 import SchoolIcon from '@mui/icons-material/School'
@@ -19,6 +19,18 @@ import Link from 'next/link'
 const ListItem = styled(MuiListItem)(
   ({ theme }) => ({
     paddingLeft: theme.spacing(3)
+  })
+)
+
+const ListItemIcon = styled(MuiListItemIcon)(
+  ({ theme }) => ({
+    color: '#fff'
+  })
+)
+
+const ListItemButton = styled(MuiListItemButton)(
+  ({ theme }) => ({
+    color: '#fff'
   })
 )
 
@@ -44,7 +56,7 @@ export default function DrawerContent () {
       </DrawerHeader>
       <Divider />
       <List>
-        <CollapsableListItem primary='أولياء الأمور' icon={SupervisorAccountIcon}>
+        <CollapsableListItem primary='أولياء الأمور' icon={SupervisorAccountIcon} buttonSx={{ color: '#fff' }} iconSx={{ color: '#fff' }}>
           <List component="div" disablePadding>
             <Link href='/dashboard/guardians/add'>
               <ListItemButton component='a' sx={{ pl: 4 }}>
@@ -64,7 +76,7 @@ export default function DrawerContent () {
             </Link>
           </List>
         </CollapsableListItem>
-        <CollapsableListItem primary='الطلاب' icon={FaceIcon}>
+        <CollapsableListItem primary='الطلاب' icon={FaceIcon} buttonSx={{ color: '#fff' }} iconSx={{ color: '#fff' }}>
           <List component="div" disablePadding>
             <Link href='/dashboard/students/add'>
               <ListItemButton component='a' sx={{ pl: 4 }}>
@@ -84,7 +96,7 @@ export default function DrawerContent () {
             </Link>
           </List>
         </CollapsableListItem>
-        <CollapsableListItem primary='الفصول' icon={SchoolIcon}>
+        <CollapsableListItem primary='الفصول' icon={SchoolIcon} buttonSx={{ color: '#fff' }} iconSx={{ color: '#fff' }}>
           <List component="div" disablePadding>
             <Link href='/dashboard/classes/add'>
               <ListItemButton component='a' sx={{ pl: 4 }}>
@@ -104,7 +116,7 @@ export default function DrawerContent () {
             </Link>
           </List>
         </CollapsableListItem>
-        <CollapsableListItem primary='الجلسات' icon={AssignmentTurnedInIcon}>
+        <CollapsableListItem primary='الجلسات' icon={AssignmentTurnedInIcon} buttonSx={{ color: '#fff' }} iconSx={{ color: '#fff' }}>
           <List component="div" disablePadding>
             <Link href='/dashboard/sessions/add'>
               <ListItemButton component='a' sx={{ pl: 4 }}>

@@ -42,7 +42,7 @@ export function DialogProvider ({ children }) {
             {title}
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
+            <DialogContentText id="alert-dialog-description" component='div'>
               {text}
             </DialogContentText>
           </DialogContent>

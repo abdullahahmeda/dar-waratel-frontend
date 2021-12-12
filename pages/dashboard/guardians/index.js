@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography'
 import CircularProgress from '@mui/material/CircularProgress'
 import Button from '@mui/material/Button'
 import Link from 'next/link'
+import { useDialog } from '../../../libs/my-dialog'
+import { useSnackbar } from 'notistack'
 
 const columns = [
   {
@@ -27,20 +29,46 @@ const columns = [
 
 function GuardiansIndex () {
   const [data, setData] = useState([])
-  const [page, setPage] = useState(0)
   const [count, setCount] = useState(1)
   const [loading, setLoading] = useState(true)
+  const { enqueueSnackbar } = useSnackbar()
+  const { openModal, closeModal } = useDialog()
+
   useEffect(() => {
     API.get(`/api/guardians`)
       .then(({ data }) => {
         setData(data.guardians)
         setCount(data.guardians.length)
+        // setTimeout(() => setLoading(false), 5000)
         setLoading(false)
       })
   }, [])
 
-  const confirmDeleteRow = () => {
-    
+  const confirmDeleteRow = (row, key) => {
+    openModal({
+      title: 'حذف ولي أمر',
+      text: <div>هل أنت متأكد من رغبتك في حذف ولي الأمر <Typography sx={{ fontWeight: 'bold' }}>{row.name}؟</Typography></div>,
+      actions: (
+        <>
+          <Button onClick={closeModal}>تراجع</Button>
+          <Button onClick={() => deleteRow(row, key)}>حذف</Button>
+        </>
+      )
+    })
+  }
+
+  const deleteRow = (row, key) => {
+    closeModal()
+    API.delete(`/api/guardians/${row.id}`)
+      .then(() => {
+        const dataCopy = [...data]
+        dataCopy.splice(key, 1)
+        setData(dataCopy)
+        enqueueSnackbar('تم حذف ولي الأمر بنجاح', { variant: 'success' })
+      })
+      .catch(() => {
+        enqueueSnackbar('حدث خطأ أثناء حذف ولي الأمر', { variant: 'error' })
+      })
   }
 
   return (

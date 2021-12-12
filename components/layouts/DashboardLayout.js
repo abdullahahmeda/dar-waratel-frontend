@@ -12,7 +12,7 @@ export default function DashboardLayout ({ children }) {
   const Component = showDesktopLayout ? DashboardDesktopLayout : DashboardMobileLayout
   return (
     <>
-      <Global styles={{ body: { backgroundColor: '#f3f3f3' } }} />
+      <Global styles={{ body: { backgroundColor: theme.palette.background.default } }} />
       <Component open={open} setOpen={setOpen}>{children}</Component>
     </>
   )
