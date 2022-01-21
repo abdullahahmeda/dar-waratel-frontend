@@ -5,9 +5,7 @@ export default function MasterLayout ({ children }) {
   return (
     <>
       <Header />
-      <Box sx={{ mt: 2 }}>
-        {children}
-      </Box>
+      <Box sx={{ mt: 2 }}>{children}</Box>
     </>
   )
 }

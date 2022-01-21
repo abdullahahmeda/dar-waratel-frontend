@@ -13,7 +13,7 @@ export function DialogProvider ({ children }) {
   const [text, setText] = useState('')
   const [actions, setActions] = useState(null)
 
-  const openModal = (options) => {
+  const openModal = options => {
     if (!options) options = {}
     setTitle(options.title)
     setText(options.text)
@@ -35,20 +35,16 @@ export function DialogProvider ({ children }) {
         <Dialog
           open={open}
           onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
         >
-          <DialogTitle id="alert-dialog-title">
-            {title}
-          </DialogTitle>
+          <DialogTitle id='alert-dialog-title'>{title}</DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description" component='div'>
+            <DialogContentText id='alert-dialog-description' component='div'>
               {text}
             </DialogContentText>
           </DialogContent>
-          {actions && <DialogActions>
-            {actions}
-          </DialogActions>}
+          {actions && <DialogActions>{actions}</DialogActions>}
         </Dialog>
         {children}
       </>

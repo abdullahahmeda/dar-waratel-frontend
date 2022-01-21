@@ -16,15 +16,16 @@ export default function GuardianHome () {
   const [students, setStudents] = useState([])
 
   useEffect(() => {
-    API.get(`/api/students?guardian_id=${authedUser.id}`)
-      .then(({ data }) => {
-        setStudents(data.students)
-      })
+    API.get(`/api/students?guardian_id=${authedUser.id}`).then(({ data }) => {
+      setStudents(data.students)
+    })
   }, [])
 
   return (
     <Container>
-      <Typography variant='h3' mb={2}>الطلاب</Typography>
+      <Typography variant='h3' mb={2}>
+        الطلاب
+      </Typography>
       {students ? (
         <Grid container spacing={2}>
           {students.map(student => (
@@ -44,7 +45,9 @@ export default function GuardianHome () {
             </Grid>
           ))}
         </Grid>
-      ) : <Typography>لا يوجد طلاب</Typography>}
+      ) : (
+        <Typography>لا يوجد طلاب</Typography>
+      )}
     </Container>
   )
 }

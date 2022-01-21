@@ -13,9 +13,7 @@ export default function Home () {
         </Head>
       </div>
       {authedUser ? (
-        <>
-          {authedUser.type === 'guardian' && <GuardianHome />}
-        </>
+        <>{authedUser.type === 'guardian' && <GuardianHome />}</>
       ) : null}
       {}
     </MasterLayout>

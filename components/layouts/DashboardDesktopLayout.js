@@ -8,7 +8,7 @@ import AppBarContent from '../AppBarContent'
 const initialDrawerWidth = 73
 const fullDrawerWidth = 240
 
-const openedMixin = (theme) => ({
+const openedMixin = theme => ({
   width: fullDrawerWidth,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -17,7 +17,7 @@ const openedMixin = (theme) => ({
   overflowX: 'hidden'
 })
 
-const closedMixin = (theme) => ({
+const closedMixin = theme => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
@@ -26,7 +26,7 @@ const closedMixin = (theme) => ({
   width: `${initialDrawerWidth}px`
 })
 
-const Content = styled(Box, { shouldForwardProp: (prop) => prop !== 'open' })(
+const Content = styled(Box, { shouldForwardProp: prop => prop !== 'open' })(
   ({ theme, open }) => ({
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
@@ -43,51 +43,51 @@ const Content = styled(Box, { shouldForwardProp: (prop) => prop !== 'open' })(
   })
 )
 
-const AppBar = styled(MuiAppBar, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: prop => prop !== 'open'
+})(({ theme, open }) => ({
+  transition: theme.transitions.create(['margin', 'width'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen
+  }),
+  boxShadow: theme.shadows[0],
+  width: `calc(100% - ${initialDrawerWidth}px)`,
+  marginLeft: `${initialDrawerWidth}px`,
+  ...(open && {
+    width: `calc(100% - ${fullDrawerWidth}px)`,
+    marginLeft: `${fullDrawerWidth}px`,
     transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    boxShadow: theme.shadows[0],
-    width: `calc(100% - ${initialDrawerWidth}px)`,
-    marginLeft: `${initialDrawerWidth}px`,
-    ...(open && {
-      width: `calc(100% - ${fullDrawerWidth}px)`,
-      marginLeft: `${fullDrawerWidth}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
-      })
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
     })
   })
-)
+}))
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: fullDrawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    color: '#fff',
-    '& .MuiPaper-root': { backgroundColor: theme.palette.primary.dark },
-    '&:hover': {
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: prop => prop !== 'open'
+})(({ theme, open }) => ({
+  width: fullDrawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  color: '#fff',
+  '& .MuiPaper-root': { backgroundColor: theme.palette.primary.dark },
+  '&:hover': {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': {
       ...openedMixin(theme),
-      '& .MuiDrawer-paper': {
-        ...openedMixin(theme),
-        ...(!open && { boxShadow: theme.shadows[4] })
-      }
-    },
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme)
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme)
-    })
+      ...(!open && { boxShadow: theme.shadows[4] })
+    }
+  },
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme)
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme)
   })
-)
+}))
 
 export default function DashboardDesktopLayout ({ open, setOpen, children }) {
   // const theme = useTheme()
@@ -98,10 +98,7 @@ export default function DashboardDesktopLayout ({ open, setOpen, children }) {
           <AppBarContent open={open} setOpen={setOpen} />
         </AppBar>
       </Box>
-      <Drawer
-        variant='permanent'
-        open={open}
-      >
+      <Drawer variant='permanent' open={open}>
         <DrawerContent />
       </Drawer>
       <Content sx={{ mt: 2 }} open={open}>

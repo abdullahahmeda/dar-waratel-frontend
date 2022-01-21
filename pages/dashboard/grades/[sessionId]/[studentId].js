@@ -26,7 +26,12 @@ const defaultValues = {
 }
 
 function Grades () {
-  const { control, setValue, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     defaultValues,
     resolver: yupResolver(createGradeSchema)
   })
@@ -47,7 +52,10 @@ function Grades () {
   useEffect(() => {
     API.get(`/api/grades/${sessionId}/${studentId}`)
       .then(({ data }) => {
-        setValue('grades', data.grades.concat([{ name: '', type: '', grade: '' }]))
+        setValue(
+          'grades',
+          data.grades.concat([{ name: '', type: '', grade: '' }])
+        )
       })
       .catch(error => {
         console.log(error)
@@ -57,15 +65,14 @@ function Grades () {
       })
   }, [])
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     API.post('/api/grades', {
       grades: data.grades,
       session_id: sessionId,
       student_id: studentId
+    }).then(({ data }) => {
+      enqueueSnackbar('تم تحديث الدرجات', { variant: 'success' })
     })
-      .then(({ data }) => {
-        enqueueSnackbar('تم تحديث الدرجات', { variant: 'success' })
-      })
   }
 
   return (
@@ -75,14 +82,20 @@ function Grades () {
           <title>دار ورتل | إضافة درجات</title>
         </Head>
         <Container>
-          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2, ...(loading && { backgroundColor: '#f2f2f2' }) }}>
+          <Paper
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ p: 2, ...(loading && { backgroundColor: '#f2f2f2' }) }}
+          >
             {loading ? (
               <Box sx={{ textAlign: 'center' }}>
                 <CircularProgress color='inherit' />
               </Box>
             ) : (
               <>
-                <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة درجات</Typography>
+                <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>
+                  إضافة درجات
+                </Typography>
                 <Grid container spacing={1} sx={{ mb: 1 }} rowSpacing={1}>
                   {fields.map((field, index) => (
                     <Grid key={field._id} container item spacing={1}>
@@ -92,8 +105,12 @@ function Grades () {
                           control={control}
                           label='الورد (السورة والآيات)'
                           fullWidth
-                          error={Boolean(errors.grades && errors.grades[index]?.name?.message)}
-                          helperText={errors.grades && errors.grades[index]?.name?.message}
+                          error={Boolean(
+                            errors.grades && errors.grades[index]?.name?.message
+                          )}
+                          helperText={
+                            errors.grades && errors.grades[index]?.name?.message
+                          }
                         />
                       </Grid>
                       <Grid item xs>
@@ -102,8 +119,12 @@ function Grades () {
                           control={control}
                           label='نوع الحفظ'
                           fullWidth
-                          error={Boolean(errors.grades && errors.grades[index]?.type?.message)}
-                          helperText={errors.grades && errors.grades[index]?.type?.message}
+                          error={Boolean(
+                            errors.grades && errors.grades[index]?.type?.message
+                          )}
+                          helperText={
+                            errors.grades && errors.grades[index]?.type?.message
+                          }
                         />
                       </Grid>
                       <Grid item xs>
@@ -112,12 +133,22 @@ function Grades () {
                           control={control}
                           label='التقييم'
                           fullWidth
-                          error={Boolean(errors.grades && errors.grades[index]?.grade?.message)}
-                          helperText={errors.grades && errors.grades[index]?.grade?.message}
+                          error={Boolean(
+                            errors.grades &&
+                              errors.grades[index]?.grade?.message
+                          )}
+                          helperText={
+                            errors.grades &&
+                            errors.grades[index]?.grade?.message
+                          }
                         />
                       </Grid>
                       <Grid item sx={{ marginTop: 1 }}>
-                        <IconButton color='error' disabled={fields.length === 1} onClick={() => remove(index)}>
+                        <IconButton
+                          color='error'
+                          disabled={fields.length === 1}
+                          onClick={() => remove(index)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </Grid>
@@ -125,9 +156,18 @@ function Grades () {
                   ))}
                 </Grid>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <LoadingButton type='button' variant='contained' color='secondary' onClick={() => append({ name: '', type: '', grade: '' })}>إضافة تقييم آخر</LoadingButton>
+                  <LoadingButton
+                    type='button'
+                    variant='contained'
+                    color='secondary'
+                    onClick={() => append({ name: '', type: '', grade: '' })}
+                  >
+                    إضافة تقييم آخر
+                  </LoadingButton>
                 </Box>
-                <LoadingButton type='submit' variant='contained'>حفظ</LoadingButton>
+                <LoadingButton type='submit' variant='contained'>
+                  حفظ
+                </LoadingButton>
               </>
             )}
           </Paper>

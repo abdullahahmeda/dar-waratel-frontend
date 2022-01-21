@@ -18,10 +18,9 @@ export default function Grades () {
   const { sessionId, studentId } = router.query
 
   useEffect(() => {
-    API.get(`/api/grades/${sessionId}/${studentId}`)
-      .then(({ data }) => {
-        setGrades(data.grades)
-      })
+    API.get(`/api/grades/${sessionId}/${studentId}`).then(({ data }) => {
+      setGrades(data.grades)
+    })
   }, [])
 
   return (

@@ -32,7 +32,11 @@ const defaultValues = {
 }
 
 function Login () {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     resolver: yupResolver(loginSchema),
     defaultValues
   })
@@ -44,7 +48,7 @@ function Login () {
   const { enqueueSnackbar } = useSnackbar()
   const theme = useTheme()
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     setLoading(true)
     API.post('/login', data)
       .then(({ data }) => {
@@ -54,9 +58,10 @@ function Login () {
         dispatch(setAuthedUser(data.user))
         router.push('/')
       })
-      .catch(({ response }) => {
-        if (response.status === 403) return setError(httpErrors[10])
-        else if (response) return setError(httpErrors[response?.data?.error?.code || 1])
+      .catch(error => {
+        if (error.response?.status === 403) return setError(httpErrors[10])
+        else if (error.response)
+          return setError(httpErrors[response?.data?.error?.code || 1])
         setError(httpErrors[1])
       })
       .finally(() => setLoading(false))
@@ -76,8 +81,15 @@ function Login () {
           <title>دار ورتل | تسجيل الدخول</title>
         </Head>
         <Container>
-          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ mt: 4, maxWidth: '25rem', mx: 'auto', p: 2 }} bgcolor='#fff'>
-            <Typography variant='h4' sx={{ textAlign: 'center', mb: 2 }}>تسجيل الدخول</Typography>
+          <Paper
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ mt: 4, maxWidth: '25rem', mx: 'auto', p: 2 }}
+            bgcolor='#fff'
+          >
+            <Typography variant='h4' sx={{ textAlign: 'center', mb: 2 }}>
+              تسجيل الدخول
+            </Typography>
             <TextField
               name='username'
               control={control}
@@ -97,16 +109,40 @@ function Login () {
               error={Boolean(errors.password?.message)}
               helperText={errors.password?.message}
             />
-            <FormControl component='fieldset' sx={{ mb: 1 }} error={Boolean(errors.type?.message)}>
+            <FormControl
+              component='fieldset'
+              sx={{ mb: 1 }}
+              error={Boolean(errors.type?.message)}
+            >
               <FormLabel component='legend'>تسجيل الدخول كـ</FormLabel>
               <RadioGroup row name='type' control={control}>
-                <FormControlLabel value='guardian' control={<Radio />} label='ولي أمر' />
-                <FormControlLabel value='admin' control={<Radio />} label='أدمن' />
+                <FormControlLabel
+                  value='guardian'
+                  control={<Radio />}
+                  label='ولي أمر'
+                />
+                <FormControlLabel
+                  value='admin'
+                  control={<Radio />}
+                  label='أدمن'
+                />
               </RadioGroup>
               <FormHelperText>{errors.type?.message}</FormHelperText>
             </FormControl>
-            {error && <FormHelperText error={Boolean(error)} sx={{ mb: 1 }}>{error}</FormHelperText>}
-            <LoadingButton type='submit' loading={loading} variant='contained' fullWidth size='large'>تسجيل الدخول</LoadingButton>
+            {error && (
+              <FormHelperText error={Boolean(error)} sx={{ mb: 1 }}>
+                {error}
+              </FormHelperText>
+            )}
+            <LoadingButton
+              type='submit'
+              loading={loading}
+              variant='contained'
+              fullWidth
+              size='large'
+            >
+              تسجيل الدخول
+            </LoadingButton>
           </Paper>
         </Container>
       </div>

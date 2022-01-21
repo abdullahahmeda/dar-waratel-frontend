@@ -14,6 +14,8 @@ import httpErrors from '../../../httpErrors.json'
 import { useSnackbar } from 'notistack'
 import Typography from '@mui/material/Typography'
 import { useRouter } from 'next/router'
+import { useQueryClient, useMutation } from 'react-query'
+import { createGuardian } from '../../../utils/api'
 
 const defaultValues = {
   name: '',
@@ -25,32 +27,42 @@ const defaultValues = {
 }
 
 export default function AddGuardian () {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     resolver: yupResolver(createGuardianSchema),
     defaultValues
   })
 
-  const [loading, setLoading] = useState(false)
+  const queryClient = useQueryClient()
+
+  const [formLoading, setFormLoading] = useState(false)
+
+  const createGuardianMutation = useMutation(data => createGuardian(data), {
+    onMutate: () => {
+      setFormLoading(true)
+    },
+    onSettled: () => {
+      setFormLoading(false)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('guardians')
+      enqueueSnackbar('تم إضافة ولي الأمر بنجاح', {
+        variant: 'success'
+      })
+      router.push('/dashboard/guardians')
+    }
+  })
+
   const [error, setError] = useState('')
   const router = useRouter()
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const onSubmit = (data) => {
-    setLoading(true)
-    API.post('/api/guardians', data)
-      .then(res => {
-        enqueueSnackbar('تم إضافة ولي الأمر بنجاح', {
-          variant: 'success'
-        })
-        router.push('/dashboard/guardians')
-      })
-      .catch(({ response }) => {
-        if (response.status === 403) return setError(httpErrors[10])
-        else if (response) return setError(httpErrors[response?.data?.error?.code || 1])
-        setError(httpErrors[1])
-      })
-      .finally(() => setLoading(false))
+  const onSubmit = data => {
+    createGuardianMutation.mutate(data)
   }
 
   return (
@@ -60,8 +72,14 @@ export default function AddGuardian () {
           <title>لوحة التحكم | إضافة ولي أمر</title>
         </Head>
         <Container>
-          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
-            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة ولي أمر</Typography>
+          <Paper
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ p: 2 }}
+          >
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>
+              إضافة ولي أمر
+            </Typography>
             <TextField
               name='name'
               control={control}
@@ -118,8 +136,18 @@ export default function AddGuardian () {
               error={Boolean(errors.address?.message)}
               helperText={errors.address?.message}
             />
-            {error && <FormHelperText error={Boolean(error)} sx={{ mb: 1 }}>{error}</FormHelperText>}
-            <LoadingButton type='submit' variant='contained' loading={loading}>إضافة</LoadingButton>
+            {error && (
+              <FormHelperText error={Boolean(error)} sx={{ mb: 1 }}>
+                {error}
+              </FormHelperText>
+            )}
+            <LoadingButton
+              type='submit'
+              variant='contained'
+              loading={formLoading}
+            >
+              إضافة
+            </LoadingButton>
           </Paper>
         </Container>
       </div>

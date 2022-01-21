@@ -26,8 +26,14 @@ const defaultValues = {
 }
 
 function AddSession () {
-  const { control, setValue, getValues, handleSubmit, formState: { errors } } = useForm({
-    defaultValues,
+  const {
+    control,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues
     // resolver: yupResolver(createClassSchema)
   })
 
@@ -89,18 +95,17 @@ function AddSession () {
     }
   }, [studentsLoading])
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     API.post('/api/sessions', {
       session_date: formatISO(data.session_date, { representation: 'date' }),
       class_id: data.class.id,
       students: data.students.map(student => student.id)
-    })
-      .then(response => {
-        enqueueSnackbar('تم إضافة الجلسة بنجاح', {
-          variant: 'success'
-        })
-        router.push('/dashboard/sessions')
+    }).then(response => {
+      enqueueSnackbar('تم إضافة الجلسة بنجاح', {
+        variant: 'success'
       })
+      router.push('/dashboard/sessions')
+    })
   }
 
   return (
@@ -110,20 +115,27 @@ function AddSession () {
           <title>دار ورتل | إضافة جلسة</title>
         </Head>
         <Container>
-          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
-            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة جلسة</Typography>
+          <Paper
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ p: 2 }}
+          >
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>
+              إضافة جلسة
+            </Typography>
             <DatePicker
               name='session_date'
               control={control}
               label='موعد الجلسة'
-              renderInput={(params) => (
-              <MuiTextField
-                {...params}
-                fullWidth
-                sx={{ mb: 1 }}
-                error={Boolean(errors.session_date?.message)}
-                helperText={errors.session_date?.message}
-              />)}
+              renderInput={params => (
+                <MuiTextField
+                  {...params}
+                  fullWidth
+                  sx={{ mb: 1 }}
+                  error={Boolean(errors.session_date?.message)}
+                  helperText={errors.session_date?.message}
+                />
+              )}
             />
             <Autocomplete
               name='class'
@@ -133,7 +145,7 @@ function AddSession () {
               onOpen={() => setClassesOpen(true)}
               onClose={() => setClassesOpen(false)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={option => option.name}
               renderOption={(props, option) => (
                 <Box component='li' {...props} key={option.id}>
                   {option.name}
@@ -141,7 +153,7 @@ function AddSession () {
               )}
               options={classes}
               loading={classesLoading}
-              renderInput={(params) => (
+              renderInput={params => (
                 <MuiTextField
                   error={Boolean(errors.classes?.message)}
                   helperText={errors.classes?.message}
@@ -151,7 +163,9 @@ function AddSession () {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {classesLoading ? <CircularProgress color='inherit' size={20} /> : null}
+                        {classesLoading ? (
+                          <CircularProgress color='inherit' size={20} />
+                        ) : null}
                         {params.InputProps.endAdornment}
                       </>
                     )
@@ -167,11 +181,13 @@ function AddSession () {
               sx={{ mb: 1 }}
               onOpen={() => setStudentsOpen(true)}
               onClose={() => setStudentsOpen(false)}
-              isOptionEqualToValue={(option, value) => option.name === value.name}
-              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) =>
+                option.name === value.name
+              }
+              getOptionLabel={option => option.name}
               options={students}
               loading={studentsLoading}
-              renderInput={(params) => (
+              renderInput={params => (
                 <MuiTextField
                   error={Boolean(errors.students?.message)}
                   helperText={errors.students?.message}
@@ -181,7 +197,9 @@ function AddSession () {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {studentsLoading ? <CircularProgress color='inherit' size={20} /> : null}
+                        {studentsLoading ? (
+                          <CircularProgress color='inherit' size={20} />
+                        ) : null}
                         {params.InputProps.endAdornment}
                       </>
                     )
@@ -189,7 +207,9 @@ function AddSession () {
                 />
               )}
             />
-            <LoadingButton type='submit' variant='contained'>إضافة</LoadingButton>
+            <LoadingButton type='submit' variant='contained'>
+              إضافة
+            </LoadingButton>
           </Paper>
         </Container>
       </div>

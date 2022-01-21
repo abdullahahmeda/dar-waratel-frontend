@@ -16,6 +16,8 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup.umd'
 import Typography from '@mui/material/Typography'
 import { useSnackbar } from 'notistack'
 import { useRouter } from 'next/router'
+import { useMutation, useQueryClient } from 'react-query'
+import { createClass } from '../../../utils/api'
 
 const defaultValues = {
   name: '',
@@ -23,9 +25,33 @@ const defaultValues = {
 }
 
 function AddClass () {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     defaultValues,
     resolver: yupResolver(createClassSchema)
+  })
+
+  const [formLoading, setFormLoading] = useState(false)
+
+  const queryClient = useQueryClient()
+
+  const createClassMutation = useMutation(data => createClass(data), {
+    onMutate: () => {
+      setFormLoading(true)
+    },
+    onSettled: () => {
+      setFormLoading(false)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('classes')
+      enqueueSnackbar('تم إضافة الفصل بنجاح', {
+        variant: 'success'
+      })
+      router.push('/dashboard/classes')
+    }
   })
 
   const [open, setOpen] = useState(false)
@@ -53,17 +79,11 @@ function AddClass () {
       })
   }, [loading])
 
-  const onSubmit = (data) => {
-    API.post('/api/classes', {
+  const onSubmit = data => {
+    createClassMutation.mutate({
       name: data.name,
       students: data.students.map(student => student.id)
     })
-      .then(response => {
-        enqueueSnackbar('تم إضافة الفصل بنجاح', {
-          variant: 'success'
-        })
-        router.push('/dashboard/classes')
-      })
   }
 
   return (
@@ -73,8 +93,14 @@ function AddClass () {
           <title>دار ورتل | إضافة فصل</title>
         </Head>
         <Container>
-          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
-            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة فصل</Typography>
+          <Paper
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ p: 2 }}
+          >
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>
+              إضافة فصل
+            </Typography>
             <TextField
               name='name'
               control={control}
@@ -92,13 +118,15 @@ function AddClass () {
               sx={{ mb: 1 }}
               onOpen={() => setOpen(true)}
               onClose={() => setOpen(false)}
-              isOptionEqualToValue={(option, value) => option.name === value.name}
-              getOptionLabel={(option) => option.name}
+              isOptionEqualToValue={(option, value) =>
+                option.name === value.name
+              }
+              getOptionLabel={option => option.name}
               options={students}
               loading={loading}
               loadingText='جاري التحميل...'
               noOptionsText='لا يوجد اختيارات'
-              renderInput={(params) => (
+              renderInput={params => (
                 <MuiTextField
                   error={Boolean(errors.students?.message)}
                   helperText={errors.students?.message}
@@ -108,7 +136,9 @@ function AddClass () {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {loading ? <CircularProgress color='inherit' size={20} /> : null}
+                        {loading ? (
+                          <CircularProgress color='inherit' size={20} />
+                        ) : null}
                         {params.InputProps.endAdornment}
                       </>
                     )
@@ -116,7 +146,13 @@ function AddClass () {
                 />
               )}
             />
-            <LoadingButton type='submit' variant='contained'>إضافة</LoadingButton>
+            <LoadingButton
+              type='submit'
+              variant='contained'
+              loading={formLoading}
+            >
+              إضافة
+            </LoadingButton>
           </Paper>
         </Container>
       </div>

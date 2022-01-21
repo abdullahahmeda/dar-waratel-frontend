@@ -10,10 +10,14 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { DialogProvider } from '../libs/my-dialog'
 import Head from 'next/head'
+import { QueryClientProvider, QueryClient } from 'react-query'
+
+const queryClient = new QueryClient()
 
 export default function App ({ Component, pageProps }) {
   return (
     <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
         <AppWrapper>
           <ThemeProvider theme={theme}>
             <Rtl>
@@ -30,6 +34,7 @@ export default function App ({ Component, pageProps }) {
             </Rtl>
           </ThemeProvider>
         </AppWrapper>
+      </QueryClientProvider>
     </Provider>
   )
 }

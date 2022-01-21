@@ -19,17 +19,12 @@ export default function DashboardMobileLayout ({ open, setOpen, children }) {
           <AppBarContent open={open} setOpen={setOpen} />
         </AppBar>
       </Box>
-      <Drawer
-        open={open}
-        onClose={() => setOpen(false)}
-      >
+      <Drawer open={open} onClose={() => setOpen(false)}>
         <Box sx={{ width: fullDrawerWidth }}>
           <DrawerContent />
         </Box>
       </Drawer>
-      <Box sx={{ mt: 2 }}>
-        {children}
-      </Box>
+      <Box sx={{ mt: 2 }}>{children}</Box>
     </>
   )
 }

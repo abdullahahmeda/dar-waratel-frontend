@@ -6,15 +6,22 @@ import Collapse from '@mui/material/Collapse'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 
-export default function CollapsableListItem ({ primary, icon, children, iconSx, buttonSx }) {
-  const Icon = icon
-  const [open, setOpen] = useState(false)
+export default function CollapsableListItem ({
+  primary,
+  icon,
+  children,
+  initialOpen,
+  ...props
+}) {
+  const [open, setOpen] = useState(Boolean(initialOpen))
   return (
     <>
-      <ListItemButton onClick={() => setOpen(!open)} sx={{ paddingLeft: 3, ...(buttonSx && buttonSx) }}>
-        {icon && <ListItemIcon sx={iconSx}>
-          {<Icon />}
-        </ListItemIcon>}
+      <ListItemButton
+        onClick={() => setOpen(!open)}
+        {...props}
+        sx={{ paddingLeft: 3, ...(props.sx && props.sx) }}
+      >
+        {icon && <ListItemIcon>{icon}</ListItemIcon>}
         <ListItemText primary={primary} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>

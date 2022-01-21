@@ -11,8 +11,14 @@ import { visuallyHidden } from '@mui/utils'
 import Box from '@mui/material/Box'
 import TablePagination from '@mui/material/TablePagination'
 
-
-export default function DataTable({ data, columns, pagination, actions, deleteAction, ...rest }) {
+export default function DataTable ({
+  data,
+  columns,
+  pagination,
+  actions,
+  deleteAction,
+  ...rest
+}) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -20,35 +26,36 @@ export default function DataTable({ data, columns, pagination, actions, deleteAc
     prepareRow,
     rows,
     page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
     pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
     setPageSize,
     state: { pageIndex, pageSize }
-  } = useTable({
-    data,
-    columns
-  }, useSortBy, usePagination)
+  } = useTable(
+    {
+      data,
+      columns
+    },
+    useSortBy,
+    usePagination
+  )
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setPageSize(parseInt(event.target.value))
     gotoPage(0)
   }
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%'}}>
+      <Paper sx={{ width: '100%' }}>
         <TableContainer>
           <Table {...getTableProps()}>
             <TableHead>
               {headerGroups.map(headerGroup => (
                 <TableRow {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map(column => (
-                    <TableCell {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <TableCell
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
                       <TableSortLabel
                         active={column.isSorted}
                         direction={column.isSortedDesc ? 'desc' : 'asc'}
@@ -56,7 +63,9 @@ export default function DataTable({ data, columns, pagination, actions, deleteAc
                         {column.render('label')}
                         {column.isSorted ? (
                           <Box component='span' sx={visuallyHidden}>
-                            {column.isSortedDesc ? 'sorted descending' : 'sorted ascending'}
+                            {column.isSortedDesc
+                              ? 'sorted descending'
+                              : 'sorted ascending'}
                           </Box>
                         ) : null}
                       </TableSortLabel>
@@ -70,32 +79,38 @@ export default function DataTable({ data, columns, pagination, actions, deleteAc
               {(pagination ? page : rows).map(row => {
                 prepareRow(row)
                 return (
-                  <TableRow
-                  hover
-                    {...row.getRowProps()}
-                  >
-                    {row.cells.map(cell => <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>)}
+                  <TableRow hover {...row.getRowProps()}>
+                    {row.cells.map(cell => (
+                      <TableCell {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                      </TableCell>
+                    ))}
                     {actions && (
-                    <TableCell align='right'>
-                      {actions(row.original, row.id)}
-                    </TableCell>)}
+                      <TableCell align='right'>
+                        {actions(row.original, row.id)}
+                      </TableCell>
+                    )}
                   </TableRow>
                 )
               })}
             </TableBody>
           </Table>
         </TableContainer>
-        {pagination && <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component='div'
-          count={rows.length}
-          rowsPerPage={pageSize}
-          page={pageIndex}
-          onPageChange={(event, newPage) => gotoPage(newPage)}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          labelRowsPerPage='عدد الصفوف لكل صفحة:'
-          labelDisplayedRows={({ from, to, count, page }) => `الصفحة رقم ${page+1} من ${Math.ceil(pageCount)}`}
-        />}
+        {pagination && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component='div'
+            count={rows.length}
+            rowsPerPage={pageSize}
+            page={pageIndex}
+            onPageChange={(event, newPage) => gotoPage(newPage)}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage='عدد الصفوف لكل صفحة:'
+            labelDisplayedRows={({ from, to, count, page }) =>
+              `الصفحة رقم ${page + 1} من ${Math.ceil(pageCount)}`
+            }
+          />
+        )}
       </Paper>
     </Box>
   )

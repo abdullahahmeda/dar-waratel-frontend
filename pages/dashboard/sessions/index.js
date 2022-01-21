@@ -36,12 +36,11 @@ function SessionsIndex () {
   const { openModal, closeModal } = useDialog()
   const { enqueueSnackbar } = useSnackbar()
   useEffect(() => {
-    API.get(`/api/sessions?page=0`)
-      .then(({ data }) => {
-        setData(data.sessions.results)
-        setCount(data.sessions.total)
-        setLoading(false)
-      })
+    API.get(`/api/sessions?page=0`).then(({ data }) => {
+      setData(data.sessions.results)
+      setCount(data.sessions.total)
+      setLoading(false)
+    })
   }, [])
 
   const deleteRow = (row, key) => {
@@ -61,7 +60,15 @@ function SessionsIndex () {
   const confirmDeleteRow = (row, key) => {
     openModal({
       title: 'حذف فصل',
-      text: <div>هل أنت متأكد من رغبتك في حذف الجلسة <Typography sx={{ fontWeight: 'bold' }}>{row.class.name}(بتاريخ {format(new Date(row.session_date), 'dd-MM-yyyy')})؟</Typography></div>,
+      text: (
+        <div>
+          هل أنت متأكد من رغبتك في حذف الجلسة{' '}
+          <Typography sx={{ fontWeight: 'bold' }}>
+            {row.class.name}(بتاريخ{' '}
+            {format(new Date(row.session_date), 'dd-MM-yyyy')})؟
+          </Typography>
+        </div>
+      ),
       actions: (
         <>
           <Button onClick={closeModal}>تراجع</Button>
@@ -78,22 +85,43 @@ function SessionsIndex () {
           <title>دار ورتل | الجلسات</title>
         </Head>
         <Container>
-          <Typography variant='h3' sx={{ mb: 3 }}>الجلسات</Typography>
-          <Link href='/dashboard/sessions/add'><Button component='a' variant='contained' sx={{ mb: 1 }}>إضافة جلسة</Button></Link>
+          <Typography variant='h3' sx={{ mb: 3 }}>
+            الجلسات
+          </Typography>
+          <Link href='/dashboard/sessions/create'>
+            <Button component='a' variant='contained' sx={{ mb: 1 }}>
+              إضافة جلسة
+            </Button>
+          </Link>
           <DataTable
             data={data}
             columns={columns}
             title={
               <Typography variant='h6'>
                 الجلسات
-                {loading && <CircularProgress size={24} sx={{ marginLeft: 15, position: 'relative', top: 4 }} />}
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{ marginLeft: 15, position: 'relative', top: 4 }}
+                  />
+                )}
               </Typography>
             }
             pagination
             actions={(row, key) => (
               <div>
-                <Link href={`/dashboard/sessions/${row.id}`}><Button variant='contained' color='info' sx={{ mr: 1 }}>عرض</Button></Link>
-                <Button variant='contained' color='error' onClick={() => confirmDeleteRow(row, key)}>حذف</Button>
+                <Link href={`/dashboard/sessions/${row.id}`}>
+                  <Button variant='contained' color='info' sx={{ mr: 1 }}>
+                    عرض
+                  </Button>
+                </Link>
+                <Button
+                  variant='contained'
+                  color='error'
+                  onClick={() => confirmDeleteRow(row, key)}
+                >
+                  حذف
+                </Button>
               </div>
             )}
           />

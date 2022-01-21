@@ -23,15 +23,14 @@ export default function Student () {
   const { id } = router.query
 
   useEffect(() => {
-    API.get(`/api/students/${id}`)
-      .then(({ data }) => {
-        setStudent(data.student)
-        API.get(`/api/sessions?student_id=${id}`)
-          .then(({ data }) => {
-            setSessions(data.sessions)
-          })
-          .finally(() => setLoading(false))
-      })
+    API.get(`/api/students/${id}`).then(({ data }) => {
+      setStudent(data.student)
+      API.get(`/api/sessions?student_id=${id}`)
+        .then(({ data }) => {
+          setSessions(data.sessions)
+        })
+        .finally(() => setLoading(false))
+    })
   }, [])
 
   return (
@@ -39,7 +38,7 @@ export default function Student () {
       {loading ? (
         <>
           <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }}
             open={loading}
           >
             <CircularProgress color='inherit' />
@@ -47,11 +46,20 @@ export default function Student () {
         </>
       ) : (
         <Container>
-          <Typography variant='h3' mb={2}>متابعة مستوى الطالب</Typography>
+          <Typography variant='h3' mb={2}>
+            متابعة مستوى الطالب
+          </Typography>
           <Typography>إسم الطالب: {student.name}</Typography>
           <Typography variant='h5'>الجلسات التي حضرها الطالب</Typography>
           <Divider sx={{ mb: 2, mt: 1 }} />
-          {sessions.map(session => <Link href={`/grades/${session.id}/${student.id}`}><Button LinkComponent='a'>{session.class.name} (بتاريخ يوم {format(new Date(session.session_date), 'dd-MM-yyyy')})</Button></Link>)}
+          {sessions.map(session => (
+            <Link href={`/grades/${session.id}/${student.id}`}>
+              <Button LinkComponent='a'>
+                {session.class.name} (بتاريخ يوم{' '}
+                {format(new Date(session.session_date), 'dd-MM-yyyy')})
+              </Button>
+            </Link>
+          ))}
         </Container>
       )}
     </MasterLayout>

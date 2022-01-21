@@ -18,11 +18,10 @@ function Session () {
   const { id } = router.query
 
   useEffect(() => {
-    API.get(`/api/sessions/${id}`)
-      .then(({ data }) => {
-        setSession(data.session)
-        setLoading(false)
-      })
+    API.get(`/api/sessions/${id}`).then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
   }, [])
 
   return (
@@ -36,24 +35,41 @@ function Session () {
             <div>
               <Box>
                 <Typography component='span'>الفصل: </Typography>
-                <Typography component='span' sx={{ fontWeight: 'bold' }}>{session.class.name}</Typography>
+                <Typography component='span' sx={{ fontWeight: 'bold' }}>
+                  {session.class.name}
+                </Typography>
               </Box>
               <Box>
                 <Typography component='span'>التاريخ: </Typography>
-                <Typography component='span' sx={{ fontWeight: 'bold' }}>{session.session_date}</Typography>
+                <Typography component='span' sx={{ fontWeight: 'bold' }}>
+                  {session.session_date}
+                </Typography>
               </Box>
               <Box>
                 <Typography component='span'>الطلاب الذين حضروا</Typography>
                 <Divider />
                 {session.students.map(student => (
-                  <Box display='flex' alignContent='center' justifyContent='space-between' my={2}>
+                  <Box
+                    display='flex'
+                    alignContent='center'
+                    justifyContent='space-between'
+                    my={2}
+                  >
                     <Typography>{student.name}</Typography>
-                    <Link href={`/dashboard/grades/${session.id}/${student.id}`}><Button component='a' variant='contained'>إضافة تقييم</Button></Link>
+                    <Link
+                      href={`/dashboard/grades/${session.id}/${student.id}`}
+                    >
+                      <Button component='a' variant='contained'>
+                        إضافة تقييم
+                      </Button>
+                    </Link>
                   </Box>
                 ))}
               </Box>
             </div>
-          ) : <div></div>}
+          ) : (
+            <div></div>
+          )}
         </Container>
       </div>
     </DashboardLayout>

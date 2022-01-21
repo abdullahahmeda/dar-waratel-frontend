@@ -15,11 +15,14 @@ export default function AppBarContent ({ open, setOpen }) {
 
   const logout = () => {
     API.post('/logout')
-      .then((res) => {
+      .then(res => {
         dispatch(setAuthedUser(null))
       })
       .catch(({ response }) => {
-        if (response) enqueueSnackbar(httpErrors[response?.data?.error?.code || 1], { variant: 'error' })
+        if (response)
+          enqueueSnackbar(httpErrors[response?.data?.error?.code || 1], {
+            variant: 'error'
+          })
         enqueueSnackbar(httpErrors[1], { variant: 'error' })
       })
   }
@@ -39,7 +42,9 @@ export default function AppBarContent ({ open, setOpen }) {
       <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
         لوحة التحكم
       </Typography>
-      <Button color='inherit' onClick={logout}>تسجيل الخروج</Button>
+      <Button color='inherit' onClick={logout}>
+        تسجيل الخروج
+      </Button>
     </Toolbar>
   )
 }

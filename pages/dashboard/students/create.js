@@ -4,7 +4,7 @@ import Head from 'next/head'
 import DashboardLayout from '../../../components/layouts/DashboardLayout'
 import TextField from '../../../components/TextField'
 import Container from '@mui/material/Container'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import API from '../../../API'
 import withAuth from '../../../hoc/withAuth'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -16,6 +16,9 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup.umd'
 import Typography from '@mui/material/Typography'
 import { useSnackbar } from 'notistack'
 import { useRouter } from 'next/router'
+import useGuardians from '../../../hooks/useGuardians'
+import { useMutation, useQueryClient } from 'react-query'
+import { createStudent } from '../../../utils/api'
 
 const defaultValues = {
   name: '',
@@ -23,51 +26,51 @@ const defaultValues = {
 }
 
 function AddStudent () {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
     defaultValues,
     resolver: yupResolver(createStudentSchema)
   })
 
+  const queryClient = useQueryClient()
+
+  const {
+    error: guardiansError,
+    isLoading: guardiansLoading,
+    data: guardiansData
+  } = useGuardians()
+
+  const createStudentMutation = useMutation(data => createStudent(data), {
+    onMutate: () => {
+      setFormLoading(true)
+    },
+    onSettled: () => {
+      setFormLoading(false)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('students')
+      enqueueSnackbar('تم إضافة الطالب بنجاح', {
+        variant: 'success'
+      })
+      router.push('/dashboard/students')
+    }
+  })
+
+  const [formLoading, setFormLoading] = useState(false)
+
   const [open, setOpen] = useState(false)
-  const [guardians, setGuardians] = useState([])
-  const [dataFetched, setDataFetched] = useState(false)
-  const loading = !dataFetched && open
 
   const { enqueueSnackbar } = useSnackbar()
   const router = useRouter()
 
-  useEffect(() => {
-    // let active = true
-
-    if (!loading) {
-      return undefined
-    }
-
-    API.get('/api/guardians')
-      .then(({ data }) => {
-        /* if (active) */ setGuardians(data.guardians)
-      })
-      .catch(({ response }) => {
-        setGuardians([{ value: '', label: 'حدث خطأ أثناء جلب أولياء الأمور' }])
-      })
-      .finally(() => setDataFetched(true))
-
-    return () => {
-      // active = false
-    }
-  }, [loading])
-
-  const onSubmit = (data) => {
-    API.post('/api/students', {
+  const onSubmit = data => {
+    createStudentMutation.mutate({
       name: data.name,
       guardian_id: data.guardian.id
     })
-      .then(response => {
-        enqueueSnackbar('تم إضافة الطالب بنجاح', {
-          variant: 'success'
-        })
-        router.push('/dashboard/students')
-      })
   }
 
   return (
@@ -77,8 +80,14 @@ function AddStudent () {
           <title>لوحة التحكم | إضافة طالب</title>
         </Head>
         <Container>
-          <Paper component='form' onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
-            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>إضافة طالب</Typography>
+          <Paper
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{ p: 2 }}
+          >
+            <Typography variant='h3' sx={{ mb: 3, textAlign: 'center' }}>
+              إضافة طالب
+            </Typography>
             <TextField
               name='name'
               control={control}
@@ -95,13 +104,15 @@ function AddStudent () {
               sx={{ mb: 1 }}
               onOpen={() => setOpen(true)}
               onClose={() => setOpen(false)}
-              isOptionEqualToValue={(option, value) => option.name === value.name}
-              getOptionLabel={(option) => option.name}
-              options={guardians}
-              loading={loading}
+              isOptionEqualToValue={(option, value) =>
+                option.name === value.name
+              }
+              getOptionLabel={option => option.name}
+              options={guardiansData?.results || []}
+              loading={guardiansLoading}
               loadingText='جاري التحميل...'
               noOptionsText='لا يوجد اختيارات'
-              renderInput={(params) => (
+              renderInput={params => (
                 <MuiTextField
                   error={Boolean(errors.guardian?.message)}
                   helperText={errors.guardian?.message}
@@ -111,7 +122,9 @@ function AddStudent () {
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {loading ? <CircularProgress color='inherit' size={20} /> : null}
+                        {guardiansLoading ? (
+                          <CircularProgress color='inherit' size={20} />
+                        ) : null}
                         {params.InputProps.endAdornment}
                       </>
                     )
@@ -119,7 +132,13 @@ function AddStudent () {
                 />
               )}
             />
-            <LoadingButton type='submit' variant='contained'>إضافة</LoadingButton>
+            <LoadingButton
+              type='submit'
+              variant='contained'
+              loading={formLoading}
+            >
+              إضافة
+            </LoadingButton>
           </Paper>
         </Container>
       </div>

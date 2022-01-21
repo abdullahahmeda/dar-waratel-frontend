@@ -26,12 +26,11 @@ function ClassesIndex () {
   const { openModal, closeModal } = useDialog()
   const { enqueueSnackbar } = useSnackbar()
   useEffect(() => {
-    API.get(`/api/classes?page=0`)
-      .then(({ data }) => {
-        setData(data.classes.results)
-        setCount(data.classes.total)
-        setLoading(false)
-      })
+    API.get(`/api/classes?page=0`).then(({ data }) => {
+      setData(data.classes.results)
+      setCount(data.classes.total)
+      setLoading(false)
+    })
   }, [])
 
   const deleteRow = (row, key) => {
@@ -51,7 +50,12 @@ function ClassesIndex () {
   const confirmDeleteRow = (row, key) => {
     openModal({
       title: 'حذف فصل',
-      text: <div>هل أنت متأكد من رغبتك في حذف الفصل <Typography sx={{ fontWeight: 'bold' }}>{row.name}؟</Typography></div>,
+      text: (
+        <div>
+          هل أنت متأكد من رغبتك في حذف الفصل{' '}
+          <Typography sx={{ fontWeight: 'bold' }}>{row.name}؟</Typography>
+        </div>
+      ),
       actions: (
         <>
           <Button onClick={closeModal}>تراجع</Button>
@@ -68,19 +72,38 @@ function ClassesIndex () {
           <title>دار ورتل | الفصول</title>
         </Head>
         <Container>
-          <Typography variant='h3' sx={{ mb: 3 }}>الفصول</Typography>
-          <Link href='/dashboard/classes/add'><Button component='a' variant='contained' sx={{ mb: 1 }}>إضافة فصل</Button></Link>
+          <Typography variant='h3' sx={{ mb: 3 }}>
+            الفصول
+          </Typography>
+          <Link href='/dashboard/classes/create'>
+            <Button component='a' variant='contained' sx={{ mb: 1 }}>
+              إضافة فصل
+            </Button>
+          </Link>
           <DataTable
             data={data}
             columns={columns}
             title={
               <Typography variant='h6'>
                 الفصول
-                {loading && <CircularProgress size={24} sx={{ marginLeft: 15, position: 'relative', top: 4 }} />}
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{ marginLeft: 15, position: 'relative', top: 4 }}
+                  />
+                )}
               </Typography>
             }
             pagination
-            actions={(row, key) => <Button variant='contained' color='error' onClick={() => confirmDeleteRow(row, key)}>حذف</Button>}
+            actions={(row, key) => (
+              <Button
+                variant='contained'
+                color='error'
+                onClick={() => confirmDeleteRow(row, key)}
+              >
+                حذف
+              </Button>
+            )}
           />
         </Container>
       </div>
